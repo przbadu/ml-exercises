@@ -1,1 +1,0 @@
-Due to privacy policy, I can't publish the exercises for the course here, as it will impact other learners.
