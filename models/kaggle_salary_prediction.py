@@ -1,8 +1,22 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.tree import DecisionTreeRegressor, plot_tree
+from sklearn.metrics import r2_score
+
+
+def plot_prediction(X, y, pred, model_name="LinearRegression"):
+    fig, ax = plt.subplots(figsize=(12, 8))
+    ax.scatter(X, y, label="Actual")
+    ax.plot(X, pred, "r", label="Predicted")
+    ax.set_title(f"Prediction using {model_name}")
+    ax.set_xlabel("Yeas of Experience")
+    ax.set_ylabel("Salary")
+    legend = ax.legend(loc="upper center", shadow=True, fontsize="x-large")
+    legend.get_frame().set_facecolor("C0")
+    plt.show()
+
 
 df = pd.read_csv("../data/kaggle/Salary.csv")
 
@@ -21,22 +35,26 @@ y = df["Salary"]
 # Train and Score data in Original Data
 model = LinearRegression()
 model.fit(X, y)
+pred = model.predict(X)
 model.score(X, y)
+# plot actual vs prediction
+plot_prediction(X, y, pred)
+print(r2_score(y, pred))
 
-
-# split data in train and test set
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+#################################
+# Decision Tree
+#################################
+model3 = DecisionTreeRegressor(random_state=42, max_leaf_nodes=8)
+model3.fit(X, y)
+y_pred2 = model3.predict(X)
+plot_prediction(X, y, y_pred2, model_name="DecisionTreeRegressor")
+# Plot decision tree
+plt.figure(figsize=(20, 10), dpi=100)
+plot_tree(
+    model3,
+    feature_names=["YearsExperience"],
+    class_names=["Salary"],
+    rounded=True,
+    filled=True,
 )
-model2 = LinearRegression()
-model2.fit(X_train, y_train)
-y_pred = model2.predict(X_test)
-print("Y TEST: ", y_test)
-print("Y PREDICT: ", y_pred)
-
-# Calculate the error scores of the model
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print(f"MSE: {mse}")
-print(f"R^2 Score: {r2}")
+plt.show()
