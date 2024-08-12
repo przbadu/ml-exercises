@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor, plot_tree
 from sklearn.metrics import r2_score
+from sklearn.neighbors import KNeighborsClassifier
 
 
 def plot_prediction(X, y, pred, model_name="LinearRegression"):
@@ -33,10 +34,10 @@ X = df[["YearsExperience"]]
 y = df["Salary"]
 
 # Train and Score data in Original Data
-model = LinearRegression()
-model.fit(X, y)
-pred = model.predict(X)
-model.score(X, y)
+lr_model = LinearRegression()
+lr_model.fit(X, y)
+pred = lr_model.predict(X)
+lr_model.score(X, y)
 # plot actual vs prediction
 plot_prediction(X, y, pred)
 print(r2_score(y, pred))
@@ -44,17 +45,27 @@ print(r2_score(y, pred))
 #################################
 # Decision Tree
 #################################
-model3 = DecisionTreeRegressor(random_state=42, max_leaf_nodes=8)
-model3.fit(X, y)
-y_pred2 = model3.predict(X)
+dtr_model = DecisionTreeRegressor(random_state=42, max_leaf_nodes=8)
+dtr_model.fit(X, y)
+y_pred2 = dtr_model.predict(X)
+print(r2_score(y, y_pred2))
 plot_prediction(X, y, y_pred2, model_name="DecisionTreeRegressor")
 # Plot decision tree
 plt.figure(figsize=(20, 10), dpi=100)
 plot_tree(
-    model3,
+    dtr_model,
     feature_names=["YearsExperience"],
     class_names=["Salary"],
     rounded=True,
     filled=True,
 )
 plt.show()
+
+################################
+# k Nearest Neighbor
+################################
+knn_model = KNeighborsClassifier(n_neighbors=1)
+knn_model.fit(X, y)
+y_pred_knn = knn_model.predict(X)
+print(r2_score(y, y_pred_knn))
+plot_prediction(X, y, y_pred_knn, model_name="kNN")
