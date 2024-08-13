@@ -17,3 +17,11 @@ docker run \
   -v ./housing_price_prediction:/app/housing_price_prediction \
   housing-price-prediction train_model.py
 ```
+
+
+## How to run streamlit apps?
+
+```sh
+cd streamlit
+streamlit run <project>/app.py
+```
